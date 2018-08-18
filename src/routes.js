@@ -12,7 +12,19 @@ const routes = () => [
     iconClass: 'fa fa-dashboard',
     title: 'Ipsum',
     to: '/',
-    component: Ipsum,
+    component: Ipsum
+  },
+  {
+    iconClass: 'fa fa-star',
+    title: 'Dolor',
+    to: 'http://patternfly-ng-app-devconf-microspa.6923.rh-us-east-1.openshiftapps.com/#/dolor',
+    component: Dolor
+  },
+  {
+    iconClass: 'fa fa-bell',
+    title: 'Amet',
+    to: '/amet',
+    component: Amet,
     subItems: [
       {
         iconClass: 'fa fa-envelope-open',
@@ -27,18 +39,6 @@ const routes = () => [
         component: Ipsum1B
       }
     ]
-  },
-  {
-    iconClass: 'fa fa-star',
-    title: 'Dolor',
-    to: '/dolor',
-    component: Dolor
-  },
-  {
-    iconClass: 'fa fa-bell',
-    title: 'Amet',
-    to: '/amet',
-    component: Amet
   },
   {
     iconClass: 'fa fa-shield',

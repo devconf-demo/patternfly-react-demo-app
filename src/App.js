@@ -65,7 +65,11 @@ class App extends React.Component {
 
   navigateTo = path => {
     const { history } = this.props;
-    history.push(path);
+    if (path.indexOf('patternfly-ng') !== -1) {
+      window.location.assign(path);
+    } else {
+      history.push(path);
+    }
   };
 
   render() {
