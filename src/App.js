@@ -121,7 +121,7 @@ class App extends React.Component {
               <Dropdown componentClass={dropdownComponentClass} id="user">
                 <Dropdown.Toggle className="nav-item-iconic" bsStyle="link">
                   <Icon type="pf" name="user" />{' '}
-                  <span className="dropdown-title">Brian Johnson</span>
+                  <span className="dropdown-title">DevConf User</span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <MenuItem eventKey="1">Preferences</MenuItem>

@@ -1,13 +1,19 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: react-demo-app
+  name: patternfly-demo-app
   annotations:
-    iconClass: icon-jboss
+    iconClass: icon-nodejs
     tags: nodejs, react, web app
     template.openshift.io/provider-display-name: "Red Hat, Inc."
-    description: Just building a little react app with a web builder
+    template.openshift.io/documentation-url: "https://github.com/devconf-demo/patternfly-react-demo-app"
+    description: "An example Node.js application with a PatternFly React starter website. For more information about using this template, including OpenShift considerations, see https://github.com/patternfly/patternfly-react-demo-app/blob/master/README.md.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing."
 parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all of the objects defined in this template.
+    required: true
+    value: patternfly-demo-app
   - name: SOURCE_REPOSITORY_URL
     description: The source URL for the application
     displayName: Source URL
@@ -37,12 +43,12 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: react-demo-app-builder
+    name: ${NAME}-builder
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: react-demo-app-runtime
+    name: ${NAME}-runtime
   spec: {}
 - apiVersion: v1
   kind: ImageStream
@@ -67,12 +73,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: react-demo-app-builder
+    name: ${NAME}-builder
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: react-demo-app-builder:latest
+        name: ${NAME}-builder:latest
     postCommit: {}
     resources:
       limits:
@@ -109,12 +115,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: react-demo-app-runtime
+    name: ${NAME}-runtime
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: react-demo-app-runtime:latest
+        name: ${NAME}-runtime:latest
     postCommit: {}
     resources:
       limits:
@@ -124,7 +130,7 @@ objects:
       images:
         - from:
             kind: ImageStreamTag
-            name: react-demo-app-builder:latest
+            name: ${NAME}-builder:latest
           paths:
             - destinationDir: .
               sourcePath: /opt/app-root/output/.
@@ -146,20 +152,20 @@ objects:
       imageChange:
         from:
           kind: ImageStreamTag
-          name: react-demo-app-builder:latest
+          name: ${NAME}-builder:latest
   status:
     lastVersion: 0
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: react-demo-app
-    name: react-demo-app
+      app: ${NAME}
+    name: ${NAME}
   spec:
     replicas: 1
     revisionHistoryLimit: 2
     selector:
-      app: react-demo-app
+      app: ${NAME}
     strategy:
       rollingParams:
         timeoutSeconds: 3600
@@ -167,7 +173,7 @@ objects:
     template:
       metadata:
         labels:
-          app: react-demo-app
+          app: ${NAME}
       spec:
         containers:
         - env:
@@ -175,47 +181,47 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: react-demo-app-runtime
+          image: ${NAME}-runtime
           imagePullPolicy: IfNotPresent
-          name: react-demo-app-runtime
+          name: ${NAME}-runtime
           ports:
           - containerPort: 8080
             name: http
             protocol: TCP
       metadata:
         labels:
-          app: react-demo-app
+          app: ${NAME}
     triggers:
       - type: ConfigChange
       - type: ImageChange
         imageChangeParams:
           automatic: true
           containerNames:
-            - react-demo-app-runtime
+            - ${NAME}-runtime
           from:
             kind: ImageStreamTag
-            name: 'react-demo-app-runtime:latest'
+            name: '${NAME}-runtime:latest'
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: react-demo-app
-    name: react-demo-app
+      app: ${NAME}
+    name: ${NAME}
   spec:
     ports:
     - name: http
       port: 8080
     selector:
-      app: react-demo-app
+      app: ${NAME}
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: react-demo-app
-    name: react-demo-app
+      app: ${NAME}
+    name: ${NAME}
   spec:
     port:
       targetPort: 8080
     to:
       kind: Service
-      name: react-demo-app
+      name: ${NAME}
