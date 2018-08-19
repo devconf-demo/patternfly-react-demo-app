@@ -17,7 +17,7 @@ const routes = () => [
   {
     iconClass: 'fa fa-star',
     title: 'Dolor',
-    to: 'http://patternfly-ng-app-devconf-microspa.6923.rh-us-east-1.openshiftapps.com/#/dolor',
+    to: '/patternfly-ng-demo-app/#/dolor',
     component: Dolor
   },
   {
